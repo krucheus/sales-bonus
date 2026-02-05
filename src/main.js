@@ -113,6 +113,8 @@ function analyzeSalesData(data, options) {
             .sort((a, b) => b.quantity - a.quantity)
             .slice(0, 10);
         }
+
+        return sellerStats;
     });
 
 
