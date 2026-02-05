@@ -20,13 +20,13 @@ function calculateSimpleRevenue(purchase, _product) {
 function calculateBonusByProfit(index, total, seller) {
     const { profit } = seller;
     if (index === 0) {
-        return (profit * 0.15).toFixed(2);
+        return profit * 0.15;
     } else if (index === 1 || index === 2) {
-        return (profit * 0.10).toFixed(2);
+        return profit * 0.10;
     } else if (total.length - 1 === index) {
         return 0;
     } else {
-        return (profit * 0.05).toFixed(2);
+        return profit * 0.05;
     } 
 };
 
@@ -106,6 +106,7 @@ function analyzeSalesData(data, options) {
         
         seller.revenue = Number(seller.revenue.toFixed(2));
         seller.profit = Number(seller.profit.toFixed(2));
+        seller.bonus = Number(seller.bonus.toFixed(2));
 
         if (seller.products_sold) {
         seller.top_products = Object.entries(seller.products_sold)
