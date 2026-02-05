@@ -6,8 +6,9 @@
  */
 function calculateSimpleRevenue(purchase, _product) {
     const { discount, sale_price, quantity } = purchase;
-   // @TODO: Расчет выручки от операции
-}
+    const discountCalc = 1 - (discount / 100);
+    return sale_price * quantity * discountCalc;
+};
 
 /**
  * Функция для расчета бонусов
@@ -19,7 +20,7 @@ function calculateSimpleRevenue(purchase, _product) {
 function calculateBonusByProfit(index, total, seller) {
     const { profit } = seller;
     // @TODO: Расчет бонуса от позиции в рейтинге
-}
+};
 
 /**
  * Функция для анализа данных продаж
@@ -56,13 +57,12 @@ function analyzeSalesData(data, options) {
         sales_count: 0,
         top_products: 0,
         bonus: 0
-    }))
+    }));
 
     const sellerIndex = {};
 
-    
-    data.sellers.forEach((seller) => { // Индексация продавцов
-        sellerIndex[seller.id] = sellerStats
+    sellerStats.forEach((seller) => { // Индексация продавцов
+        sellerIndex[seller.id] = seller;
     });
     
     const productIndex = {};
@@ -71,7 +71,28 @@ function analyzeSalesData(data, options) {
         productIndex[product.sku] = product
     });
 
-    console.log(productIndex)
+    data.purchase_records.forEach(record => { // Расчет продаж и доход
+        const seller = sellerIndex[record.seller_id];
+        seller.sales_count += 1;
+        seller.revenue += record.total_amount;
+
+        record.items.forEach(item => {
+            const product = productIndex[item.sku];
+            const cost = product.purchase_price * item.quantity;
+            const revenue = calculateSimpleRevenue(item, product);
+            seller.revenue += revenue;
+            const profit = revenue - cost;
+            seller.profit += profit;
+        });
+
+
+    });
+
+    sellerStats.sort((a, b) => b.profit - a.profit);
+
+
+
+
     console.log(sellerStats)
 
 
