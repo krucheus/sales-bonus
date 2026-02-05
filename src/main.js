@@ -19,7 +19,15 @@ function calculateSimpleRevenue(purchase, _product) {
  */
 function calculateBonusByProfit(index, total, seller) {
     const { profit } = seller;
-    // @TODO: Расчет бонуса от позиции в рейтинге
+    if (index === 0) {
+        return (profit * 0.15).toFixed(2);
+    } else if (index === 1 || index === 2) {
+        return (profit * 0.10).toFixed(2);
+    } else if (total.length - 1 === index) {
+        return 0;
+    } else {
+        return (profit * 0.05).toFixed(2);
+    } 
 };
 
 /**
@@ -83,14 +91,29 @@ function analyzeSalesData(data, options) {
             seller.revenue += revenue;
             const profit = revenue - cost;
             seller.profit += profit;
-        });
 
+            if (!seller.products_sold) seller.products_sold = {};
+            if (!seller.products_sold[item.sku]) seller.products_sold[item.sku] = 0;
+            seller.products_sold[item.sku] += item.quantity;
+        });
 
     });
 
     sellerStats.sort((a, b) => b.profit - a.profit);
 
+    sellerStats.forEach((seller, index) => {
+        seller.bonus = calculateBonusByProfit(index, sellerStats, seller);
+        
+        seller.revenue = Number(seller.revenue.toFixed(2));
+        seller.profit = Number(seller.profit.toFixed(2));
 
+        if (seller.products_sold) {
+        seller.top_products = Object.entries(seller.products_sold)
+            .map(([sku, quantity]) => ({ sku, quantity }))
+            .sort((a, b) => b.quantity - a.quantity)
+            .slice(0, 10);
+        }
+    });
 
 
     console.log(sellerStats)
