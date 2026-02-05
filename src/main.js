@@ -37,7 +37,6 @@ function calculateBonusByProfit(index, total, seller) {
  * @returns {{revenue, top_products, bonus, name, sales_count, profit, seller_id}[]}
  */
 function analyzeSalesData(data, options) {
-
 // Проверка входных данных
 
     if (!data ||
@@ -82,12 +81,11 @@ function analyzeSalesData(data, options) {
     data.purchase_records.forEach(record => { // Расчет продаж и доход
         const seller = sellerIndex[record.seller_id];
         seller.sales_count += 1;
-        seller.revenue += record.total_amount;
 
         record.items.forEach(item => {
             const product = productIndex[item.sku];
             const cost = product.purchase_price * item.quantity;
-            const revenue = calculateSimpleRevenue(item, product);
+            const revenue = calculateSimpleRevenue(item);
             seller.revenue += revenue;
             const profit = revenue - cost;
             seller.profit += profit;
@@ -118,13 +116,4 @@ function analyzeSalesData(data, options) {
 
 
     console.log(sellerStats)
-
-
-    // @TODO: Расчет выручки и прибыли для каждого продавца
-
-    // @TODO: Сортировка продавцов по прибыли
-
-    // @TODO: Назначение премий на основе ранжирования
-
-    // @TODO: Подготовка итоговой коллекции с нужными полями
 }
