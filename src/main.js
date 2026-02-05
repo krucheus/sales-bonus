@@ -69,7 +69,7 @@ function analyzeSalesData(data, options) {
     const sellerIndex = {};
 
     sellerStats.forEach((seller) => { // Индексация продавцов
-        sellerIndex[seller.id] = seller;
+        sellerIndex[seller.seller_id] = seller;
     });
     
     const productIndex = {};
