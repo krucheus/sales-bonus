@@ -57,7 +57,7 @@ function analyzeSalesData(data, options) {
     }
 
     const sellerStats = data.sellers.map(seller => ({ // Промежуточные данные
-        id: seller.id,
+        seller_id: seller.id,
         name: seller.first_name + ' ' + seller.last_name,
         revenue: 0,
         profit: 0,
