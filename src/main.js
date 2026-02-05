@@ -114,9 +114,8 @@ function analyzeSalesData(data, options) {
             .slice(0, 10);
         }
 
-        return sellerStats;
     });
-
-
-    console.log(sellerStats)
+    
+    return sellerStats;
 }
+
