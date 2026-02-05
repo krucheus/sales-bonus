@@ -94,6 +94,7 @@ function analyzeSalesData(data, options) {
             if (!seller.products_sold) seller.products_sold = {};
             if (!seller.products_sold[item.sku]) seller.products_sold[item.sku] = 0;
             seller.products_sold[item.sku] += item.quantity;
+
         });
 
     });
@@ -101,7 +102,7 @@ function analyzeSalesData(data, options) {
     sellerStats.sort((a, b) => b.profit - a.profit);
 
     sellerStats.forEach((seller, index) => {
-        seller.bonus = calculateBonusByProfit(index, sellerStats, seller);
+        seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller);
         
         seller.revenue = +seller.revenue.toFixed(2);
         seller.profit = +seller.profit.toFixed(2);
@@ -113,6 +114,8 @@ function analyzeSalesData(data, options) {
             .sort((a, b) => b.quantity - a.quantity)
             .slice(0, 10);
         }
+
+        delete seller.products_sold;
 
     });
     
