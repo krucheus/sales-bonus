@@ -5,6 +5,7 @@
  * @returns {number}
  */
 function calculateSimpleRevenue(purchase, _product) {
+    const { discount, sale_price, quantity } = purchase;
    // @TODO: Расчет выручки от операции
 }
 
@@ -16,6 +17,7 @@ function calculateSimpleRevenue(purchase, _product) {
  * @returns {number}
  */
 function calculateBonusByProfit(index, total, seller) {
+    const { profit } = seller;
     // @TODO: Расчет бонуса от позиции в рейтинге
 }
 
@@ -26,13 +28,52 @@ function calculateBonusByProfit(index, total, seller) {
  * @returns {{revenue, top_products, bonus, name, sales_count, profit, seller_id}[]}
  */
 function analyzeSalesData(data, options) {
-    // @TODO: Проверка входных данных
 
-    // @TODO: Проверка наличия опций
+// Проверка входных данных
 
-    // @TODO: Подготовка промежуточных данных для сбора статистики
+    if (!data ||
+        !Array.isArray(data.sellers) || data.sellers.length === 0 ||
+        !Array.isArray(data.products) || data.products.length === 0 ||
+        !Array.isArray(data.purchase_records) || data.purchase_records.length === 0) {
+        throw new Error('Некорректные входные данные');
+    }
 
-    // @TODO: Индексация продавцов и товаров для быстрого доступа
+    if (typeof options !== 'object') {
+        throw new Error('Опции должны быть объектом')
+    }
+
+    const { calculateRevenue, calculateBonus } = options; // Проверка наличия опции
+
+    if (!calculateRevenue || !calculateBonus) {
+        throw new Error('Чего-то не хватает')
+    }
+
+    const sellerStats = data.sellers.map(seller => ({ // Промежуточные данные
+        id: seller.id,
+        name: seller.first_name + ' ' + seller.last_name,
+        revenue: 0,
+        profit: 0,
+        sales_count: 0,
+        top_products: 0,
+        bonus: 0
+    }))
+
+    const sellerIndex = {};
+
+    
+    data.sellers.forEach((seller) => { // Индексация продавцов
+        sellerIndex[seller.id] = sellerStats
+    });
+    
+    const productIndex = {};
+
+    data.products.forEach((product) => { // Индексация товаров
+        productIndex[product.sku] = product
+    });
+
+    console.log(productIndex)
+    console.log(sellerStats)
+
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
 
